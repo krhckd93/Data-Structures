@@ -1,4 +1,4 @@
-'''
+"""
 To-do:
     Unchecked:
         Create a tree from user string.
@@ -7,7 +7,7 @@ To-do:
     Checked:
         Iterative traversal.
         Recursive traversal.
-'''
+"""
 
 
 class Node:
@@ -32,27 +32,27 @@ class Node:
         self.rchild = rchild
 
 
-def inorder(root):
+def rec_inorder(root):
     if root is None:
         return
-    inorder(root.lchild)
+    rec_inorder(root.lchild)
     print(root.value)
-    inorder(root.rchild)
+    rec_inorder(root.rchild)
 
 
-def preorder(root):
+def rec_preorder(root):
     if root is None:
         return
     print(root.value)
-    preorder(root.lvalue)
-    preorder(root.rvalue)
+    rec_preorder(root.lvalue)
+    rec_preorder(root.rvalue)
 
 
-def postorder(root):
+def rec_postorder(root):
     if root is None:
         return
-    postorder(root.lchild)
-    postorder(root.rchild)
+    rec_postorder(root.lchild)
+    rec_postorder(root.rchild)
     print(root.value)
 
 
@@ -130,16 +130,15 @@ def get_index(inorder, target):
             return i
 
 
-def build_in_pre(preorder, inorder, start, end, ind_pre):
-    if start > end:
+def build_in_pre(inorder, preorder, start_in, end_in, start_pre, end_pre):
+    if start_in > end_in or start_pre > end_pre:
         return None
-    else:
-        ind_in = get_index(inorder, preorder[ind_pre])
-        root = Node(inorder[ind_in])
-        ind_pre += 1
-        root.lchild = build_in_pre(preorder, inorder, start, ind_in-1, ind_pre)
-        root.rchild = build_in_pre(preorder, inorder, ind_in+1, end, ind_pre)
-        return root
+    root = Node(preorder[start_pre])
+    root_in_index = get_index(inorder, root.value)
+
+    root.lchild = build_in_pre(inorder, preorder, start_in, root_in_index-1, start_pre+1, start_pre + root_in_index - start_in)
+    root.rchild = build_in_pre(inorder, preorder, root_in_index+1, end_in, start_pre + root_in_index - start_in +1, end_pre)
+    return root
 
 
 def build_in_post(start_in, end_in, start_post, end_post, inorder, postorder):
@@ -152,6 +151,7 @@ def build_in_post(start_in, end_in, start_post, end_post, inorder, postorder):
     root.rchild = build_in_post(root_in_index+1, end_in, start_post + root_in_index - start_in, end_post-1, inorder, postorder)
 
     return root
+
 
 def tree_to_linked_list(root):
     if root is None:
@@ -169,7 +169,6 @@ def tree_to_linked_list(root):
         else:
             cur = s.pop()
             top -= 1
-            #print(cur.value)
             if cur.rchild is not None:
                 cur.lchild = cur.rchild
             else:
@@ -186,21 +185,20 @@ def tree_to_linked_list(root):
 
 
 # in_preorder = input("Enter the preorder sequence").split(',')
-#in_postorder, = input("Enter the postorder sequence").split('')
-#in_inorder = input("Enter the inorder sequence").split(',')
+# in_postorder, = input("Enter the postorder sequence").split('')
+# in_inorder = input("Enter the inorder sequence").split(',')
+in_preorder = [10, 12, 15, 17, 13, 14, 20]
 in_postorder = [15, 17, 12, 14, 20, 13, 10]
 in_inorder = [15, 12, 17, 10, 14, 13, 20]
-a = build_in_post(0, len(in_inorder)-1, 0, len(in_postorder)-1, in_inorder, in_postorder)
+#a = build_in_post(0, len(in_inorder)-1, 0, len(in_postorder)-1, in_inorder, in_postorder)
+a = build_in_pre(in_inorder, in_preorder, 0 , len(in_inorder)-1, 0 , len(in_preorder)-1)
 it_preorder(a)
 print("tree created.")
 a = tree_to_linked_list(a)
 cur = a
-while cur is not None :
+while cur is not None:
     print(cur.value)
     cur = cur.lchild
-
-
-
 
 '''l12 = Node(10)
 l11 = Node(15)
@@ -220,4 +218,3 @@ def main():
         print("7.Exit")
         choice = int(input("Enter choice:"))
 '''
-
