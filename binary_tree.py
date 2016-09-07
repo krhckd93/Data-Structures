@@ -2,11 +2,11 @@
 To-do:
     Unchecked:
         Create a tree from user string.
-        Create a tree from preorder, inorder and postorder sequences.
         Create a user interface.
     Checked:
         Iterative traversal.
         Recursive traversal.
+        Create a tree from preorder, inorder and postorder sequences.
 """
 
 
@@ -126,7 +126,7 @@ def it_postorder(root):
 
 def get_index(inorder, target):
     for i in range(0, len(inorder)):
-        if int(inorder[i]) == int(target):
+        if inorder[i] == target:
             return i
 
 
@@ -184,22 +184,76 @@ def tree_to_linked_list(root):
             cur = temp
 
 
+def get_max(root):
+    if root is None:
+        print("Tree is empty")
+        return
+    cur = root
+    s = []
+    top = -1
+    max = cur.value
+    while 1:
+        while cur is not None:
+            if cur.value > max:
+                max = cur.value
+            s.append(cur)
+            top += 1
+            cur = cur.lchild
+
+        if top != -1:
+            cur = s.pop()
+            top -= 1
+            cur = cur.rchild
+        else:
+            return max
+
+def eval_exp_tree(root):
+    if root is None:
+        print("Tree is empty")
+        return
+    s = []
+    exp = []
+    top = -1
+    top2 = -1
+    cur = root
+    while 1:
+        while cur is not None:
+            s.append(cur)
+            top += 1
+            cur = cur.lchild
+
+        if top == -1:
+            break
+        else:
+            cur = s.pop()
+            top -= 1
+            exp.append(cur.value)
+            top2 += 1
+            cur = cur.rchild
+    return exp
+
+
 # in_preorder = input("Enter the preorder sequence").split(',')
 # in_postorder, = input("Enter the postorder sequence").split('')
 # in_inorder = input("Enter the inorder sequence").split(',')
-in_preorder = [10, 12, 15, 17, 13, 14, 20]
+in_preorder = ['+', '*', 5, 4, '-', 100, 20]
 in_postorder = [15, 17, 12, 14, 20, 13, 10]
-in_inorder = [15, 12, 17, 10, 14, 13, 20]
+in_inorder = [5, '*', 4, '+', 100, '-', 20]
 #a = build_in_post(0, len(in_inorder)-1, 0, len(in_postorder)-1, in_inorder, in_postorder)
 a = build_in_pre(in_inorder, in_preorder, 0 , len(in_inorder)-1, 0 , len(in_preorder)-1)
-it_preorder(a)
-print("tree created.")
+#it_preorder(a)
+get_number(0, 13, 1)
+
+
+'''print("tree created.")
 a = tree_to_linked_list(a)
 cur = a
 while cur is not None:
     print(cur.value)
     cur = cur.lchild
-
+'''
+#m = get_max(a)
+#print("Largest element is : ", m)
 '''l12 = Node(10)
 l11 = Node(15)
 l1 = Node(4, l11, l12)
